@@ -16,9 +16,10 @@ public class Extender {
     private Servo releaser;
 
     public TouchSensor inSwitch;
+
     private TouchSensor outSwitch;
 
-    public double rotatorPosition = 0.3;
+    public double rotatorPosition = 0.95;
 
     public Extender(HardwareMap hardwareMap, Telemetry telemetry) {
 
@@ -32,6 +33,10 @@ public class Extender {
 
         extender.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        rotator.scaleRange(0.5, 0.95);
+
+        rotator.setPosition(rotatorPosition);
+
     }
 
 
@@ -43,21 +48,20 @@ public class Extender {
         //if(outSwitch.getState()) { finalPower = Math.min(0, finalPower); }
 
         extender.setPower(finalPower);
-
     }
 
     public void increaseRotatorPosition() {
         //rotator.setPosition(rotator.getPosition() + 0.00001);
-        rotatorPosition = Math.max(rotatorPosition, rotatorPosition + 0.05);
+        rotatorPosition = Math.max(rotatorPosition, rotatorPosition + 0.01);
         rotator.setPosition(rotatorPosition);
     }
     public void decreaseRotatorPosition() {
         //rotator.setPosition(rotator.getPosition() - 0.00001);
-        rotatorPosition = Math.min(rotatorPosition, rotatorPosition - 0.05);
+        rotatorPosition = Math.min(rotatorPosition, rotatorPosition - 0.01);
         rotator.setPosition(rotatorPosition);
     }
 
-    public void openReleaser() { releaser.setPosition(0.6); }
-    public void closeReleaser() { releaser.setPosition(0.8); }
+    public void openReleaser() { releaser.setPosition(0.97); }
+    public void closeReleaser() { releaser.setPosition(0.85); }
 
 }

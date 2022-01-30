@@ -74,7 +74,7 @@ public class FieldCentricTeleOp extends LinearOpMode {
 
             }
 
-
+/*
             if(gamepad1.x) {
                 mainRobot.lifter.drop();
             } else if(gamepad1.y) {
@@ -87,12 +87,12 @@ public class FieldCentricTeleOp extends LinearOpMode {
                 mainRobot.lifter.slap();
             } else {
                 mainRobot.lifter.unslap();
-            }
+            } */
 
             if(gamepad1.dpad_up) {
-                mainRobot.extender.setExtenderPower(0.5);
+                mainRobot.extender.setExtenderPower(1.0);
             } else if(gamepad1.dpad_down) {
-                mainRobot.extender.setExtenderPower(-0.5);
+                mainRobot.extender.setExtenderPower(-1.0);
             } else {
                 mainRobot.extender.setExtenderPower(0);
             }
@@ -113,7 +113,7 @@ public class FieldCentricTeleOp extends LinearOpMode {
             }
 
             telemetry.addData("Rotator: ", mainRobot.extender.rotatorPosition);
-            telemetry.addData("Up Switch Pressed? : ", mainRobot.lifter.upSwitch.isPressed());
+            //telemetry.addData("Up Switch Pressed? : ", mainRobot.lifter.upSwitch.isPressed());
             telemetry.addData("X: ", mainRobot.getPoseEstimate().getX());
             telemetry.addData("Y: ", mainRobot.getPoseEstimate().getY());
             telemetry.addData("Heading: ", mainRobot.getPoseEstimate().getHeading());
