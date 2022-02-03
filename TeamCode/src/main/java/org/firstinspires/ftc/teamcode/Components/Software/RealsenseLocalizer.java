@@ -37,6 +37,17 @@ public class RealsenseLocalizer implements Localizer {
      * Initializes the localizer and starts receiving packets from it
      * @param hardwareMap Passed in from the OpMode
      */
+    public RealsenseLocalizer(HardwareMap hardwareMap) {
+        super();
+        //this.telemetry = telemetry;
+        if(slamera == null) {
+            slamera = new T265Camera(cameraRobotOffset, encoderMeasurementCovariance, hardwareMap.appContext);
+            slamera.start();
+        }
+        slamera.setPose(new com.arcrobotics.ftclib.geometry.Pose2d(0,0,new Rotation2d(0)));
+        //telemetry.addData("Started!", "Started!");
+    }
+
     public RealsenseLocalizer(HardwareMap hardwareMap, Telemetry telemetry) {
         super();
         this.telemetry = telemetry;
@@ -46,6 +57,10 @@ public class RealsenseLocalizer implements Localizer {
         }
         slamera.setPose(new com.arcrobotics.ftclib.geometry.Pose2d(0,0,new Rotation2d(0)));
         //telemetry.addData("Started!", "Started!");
+    }
+
+    public void setTelemetry(Telemetry telemetry) {
+        this.telemetry = telemetry;
     }
 
     /**

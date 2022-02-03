@@ -50,7 +50,7 @@ public class NewTeleOp extends LinearOpMode {
                     gamepad1.right_stick_x));
 
             } else {
-                mainRobot.setWeightedDrivePower(new Pose2d(-stickY, -stickX, -gamepad1.right_stick_x));
+                mainRobot.setWeightedDrivePower(new Pose2d(-stickY, -stickX, gamepad1.right_stick_x));
             }
 
             if (gamepad1.right_bumper) mainRobot.intake.setRightPower(1);
@@ -83,7 +83,7 @@ public class NewTeleOp extends LinearOpMode {
             else mainRobot.spinner.spin(0);
 
             if(gamepad2.a) mainRobot.extender.openReleaser();
-            else if(gamepad2.b) mainRobot.extender.closeReleaser();
+            else if(gamepad2.b && !gamepad2.start) mainRobot.extender.closeReleaser();
 
             if(gamepad2.dpad_down) mainRobot.extender.increaseRotatorPosition();
             if(gamepad2.dpad_up) mainRobot.extender.decreaseRotatorPosition();
@@ -93,7 +93,7 @@ public class NewTeleOp extends LinearOpMode {
 
             //telemetry.addData("Rotator: ", mainRobot.extender.rotatorPosition);
             //telemetry.addData("Up Switch Pressed? : ", mainRobot.lifter.upSwitch.isPressed());
-            telemetry.addData("In switch: ", mainRobot.extender.inSwitch.isPressed());
+            telemetry.addData("In switch: ", mainRobot.extender.inSwitch.getState());
             telemetry.addData("Field centric? ", fieldCentric);
             telemetry.addData("X: ", mainRobot.getPoseEstimate().getX());
             telemetry.addData("Y: ", mainRobot.getPoseEstimate().getY());

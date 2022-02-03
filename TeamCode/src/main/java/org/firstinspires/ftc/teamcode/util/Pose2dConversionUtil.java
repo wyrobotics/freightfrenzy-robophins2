@@ -17,8 +17,9 @@ public class Pose2dConversionUtil {
      * @param inputPose FTCLib pose to convert
      * @return Roadrunner pose with the same value as the input
      */
+    //SWITCHED X AND Y BECAUSE T265 IS ON THE SIDE
     public static Pose2d toRoadrunnerPose(com.arcrobotics.ftclib.geometry.Pose2d inputPose){
-        return new Pose2d(inputPose.getX(), inputPose.getY(), inputPose.getHeading());
+        return new Pose2d(-inputPose.getY(), inputPose.getX(), inputPose.getHeading());
     }
 
     /**
@@ -62,8 +63,8 @@ public class Pose2dConversionUtil {
      */
     public static Pose2d chassisSpeedsToRoadrunnerPose(ChassisSpeeds chassisSpeeds) {
         return new Pose2d(
+                -chassisSpeeds.vyMetersPerSecond,
                 chassisSpeeds.vxMetersPerSecond,
-                chassisSpeeds.vyMetersPerSecond,
                 chassisSpeeds.omegaRadiansPerSecond);
     }
 

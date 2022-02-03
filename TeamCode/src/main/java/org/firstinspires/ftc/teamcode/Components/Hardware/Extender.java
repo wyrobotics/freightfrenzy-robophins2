@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Components.Hardware;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -9,17 +10,19 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+@Config
 public class Extender {
 
     private DcMotor extender;
     private Servo rotator;
     private Servo releaser;
 
-    public TouchSensor inSwitch;
+    public DigitalChannel inSwitch;
 
     private TouchSensor outSwitch;
 
-    public double rotatorPosition = 0.95;
+    static public double maxRotatorPosition = 0.9;
+    public double rotatorPosition = maxRotatorPosition;
 
     public Extender(HardwareMap hardwareMap, Telemetry telemetry) {
 
@@ -28,12 +31,13 @@ public class Extender {
         rotator = hardwareMap.get(Servo.class, "rotator");
         releaser = hardwareMap.get(Servo.class, "releaser");
 
-        inSwitch = hardwareMap.get(TouchSensor.class, "inSwitch");
+        inSwitch = hardwareMap.get(DigitalChannel.class, "inSwitch");
         //outSwitch = hardwareMap.get(TouchSensor.class, "outSwitch");
+        inSwitch.setMode(DigitalChannel.Mode.INPUT);
 
         extender.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        rotator.scaleRange(0.5, 0.95);
+        //rotator.scaleRange(0.5, 0.95);
 
         rotator.setPosition(rotatorPosition);
 
@@ -44,7 +48,7 @@ public class Extender {
 
         double finalPower = power;
 
-        if(inSwitch.isPressed()) { finalPower = Math.max(0, finalPower); }
+        if(!inSwitch.getState()) { finalPower = Math.max(0, finalPower); }
         //if(outSwitch.getState()) { finalPower = Math.min(0, finalPower); }
 
         extender.setPower(finalPower);
@@ -52,16 +56,16 @@ public class Extender {
 
     public void increaseRotatorPosition() {
         //rotator.setPosition(rotator.getPosition() + 0.00001);
-        rotatorPosition = Math.max(rotatorPosition, rotatorPosition + 0.01);
+        rotatorPosition = Math.min(maxRotatorPosition, rotatorPosition + 0.005);
         rotator.setPosition(rotatorPosition);
     }
     public void decreaseRotatorPosition() {
         //rotator.setPosition(rotator.getPosition() - 0.00001);
-        rotatorPosition = Math.min(rotatorPosition, rotatorPosition - 0.01);
+        rotatorPosition = Math.min(rotatorPosition, rotatorPosition - 0.005);
         rotator.setPosition(rotatorPosition);
     }
 
-    public void openReleaser() { releaser.setPosition(0.97); }
-    public void closeReleaser() { releaser.setPosition(0.85); }
+    public void openReleaser() { releaser.setPosition(0.95); }
+    public void closeReleaser() { releaser.setPosition(0.72); }
 
 }

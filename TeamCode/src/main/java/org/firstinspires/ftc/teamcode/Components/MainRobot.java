@@ -24,7 +24,7 @@ public class MainRobot extends SampleMecanumDrive {
     public MainRobot(HardwareMap hardwareMap, Telemetry telemetry) {
 
         super(hardwareMap);
-        setLocalizer(new RealsenseLocalizer(hardwareMap, telemetry));
+        //setLocalizer(new RealsenseLocalizer(hardwareMap, telemetry));
 
         extender = new Extender(hardwareMap, telemetry);
         intake = new Intake(hardwareMap, telemetry);

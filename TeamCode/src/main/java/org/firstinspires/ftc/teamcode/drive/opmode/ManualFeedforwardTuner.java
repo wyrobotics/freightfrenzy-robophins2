@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
 
+import org.firstinspires.ftc.teamcode.Components.MainRobot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 import java.util.Objects;
@@ -70,7 +71,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
-        drive = new SampleMecanumDrive(hardwareMap);
+        drive = new MainRobot(hardwareMap, telemetry);
 
         mode = Mode.TUNING_MODE;
 
@@ -111,16 +112,21 @@ public class ManualFeedforwardTuner extends LinearOpMode {
                     MotionState motionState = activeProfile.get(profileTime);
                     double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), kV, kA, kStatic);
 
-                    drive.setDrivePower(new Pose2d(targetPower, 0, 0));
+                    drive.setDrivePower(new Pose2d(-targetPower, 0, 0));
                     drive.updatePoseEstimate();
 
                     Pose2d poseVelo = Objects.requireNonNull(drive.getPoseVelocity(), "poseVelocity() must not be null. Ensure that the getWheelVelocities() method has been overridden in your localizer.");
                     double currentVelo = poseVelo.getX();
 
+                    //drive.update();
                     // update telemetry
                     telemetry.addData("targetVelocity", motionState.getV());
                     telemetry.addData("measuredVelocity", currentVelo);
                     telemetry.addData("error", motionState.getV() - currentVelo);
+                    Pose2d poseEstimate = drive.getPoseEstimate();
+                    telemetry.addData("x", poseEstimate.getX());
+                    telemetry.addData("y", poseEstimate.getY());
+                    telemetry.addData("heading", poseEstimate.getHeading());
                     break;
                 case DRIVER_MODE:
                     if (gamepad1.b) {
@@ -139,6 +145,8 @@ public class ManualFeedforwardTuner extends LinearOpMode {
                     );
                     break;
             }
+
+            
 
             telemetry.update();
         }
