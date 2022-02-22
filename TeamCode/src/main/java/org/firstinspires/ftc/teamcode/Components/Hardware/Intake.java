@@ -35,11 +35,11 @@ public class Intake {
     }
 
     public void leftSlap(double pos) { leftIntakeSlapper.setPosition(pos); }
-    public void leftSlapIn() { leftSlap(0.725); }
+    public void leftSlapIn() { leftSlap(0.45); }
     public void leftSlapOut() { leftSlap(1); }
 
     public void rightSlap(double pos) { rightIntakeSlapper.setPosition(pos); }
-    public void rightSlapIn() { rightSlap(0.3); }
+    public void rightSlapIn() { rightSlap(0.55); }
     public void rightSlapOut() { rightSlap(0.0); }
 
 }

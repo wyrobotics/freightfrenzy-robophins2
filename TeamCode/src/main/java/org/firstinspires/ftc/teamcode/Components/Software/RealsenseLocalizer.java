@@ -25,7 +25,7 @@ public class RealsenseLocalizer implements Localizer {
     public static Transform2d cameraRobotOffset = Pose2dConversionUtil.toTransform2d(
             Pose2dConversionUtil.inchesToMeters(
                     new Pose2d(-9.0, -8.25)));
-    public double encoderMeasurementCovariance = 0.8;
+    public double encoderMeasurementCovariance = 0;
 
     //private final T265Camera slamera;
 
@@ -40,10 +40,10 @@ public class RealsenseLocalizer implements Localizer {
     public RealsenseLocalizer(HardwareMap hardwareMap) {
         super();
         //this.telemetry = telemetry;
-        if(slamera == null) {
+        if(slamera == null)
             slamera = new T265Camera(cameraRobotOffset, encoderMeasurementCovariance, hardwareMap.appContext);
+        if(!slamera.isStarted())
             slamera.start();
-        }
         slamera.setPose(new com.arcrobotics.ftclib.geometry.Pose2d(0,0,new Rotation2d(0)));
         //telemetry.addData("Started!", "Started!");
     }
@@ -77,10 +77,11 @@ public class RealsenseLocalizer implements Localizer {
         //telemetry.addData("Started? ", slamera.isStarted());
 
         // Convert meters to inches
-        return Pose2dConversionUtil.metersToInches(
+        return  Pose2dConversionUtil.swapXY(
+                Pose2dConversionUtil.metersToInches(
                 // Convert to Roadrunner Pose2d
                 Pose2dConversionUtil.toRoadrunnerPose(
-                        update.pose));
+                        update.pose)));
     }
 
     /**
@@ -95,7 +96,8 @@ public class RealsenseLocalizer implements Localizer {
                 Pose2dConversionUtil.toFtclibPose(
                         // Convert inches to meters
                         Pose2dConversionUtil.inchesToMeters(
-                                pose)));
+
+                                        Pose2dConversionUtil.swapXY(pose))));
     }
 
     /**
@@ -106,11 +108,12 @@ public class RealsenseLocalizer implements Localizer {
     @Override
     public Pose2d getPoseVelocity() {
         // Convert meters to inches
-        return Pose2dConversionUtil.metersToInches(
+        return Pose2dConversionUtil.swapXY(
+                Pose2dConversionUtil.metersToInches(
                 // Convert ChassisSpeeds to Pose2d
                 Pose2dConversionUtil.chassisSpeedsToRoadrunnerPose(
                         // Get the camera's reported velocity
-                        slamera.getLastReceivedCameraUpdate().velocity));
+                        slamera.getLastReceivedCameraUpdate().velocity)));
     }
 
     /**

@@ -78,4 +78,16 @@ public class Pose2dConversionUtil {
                 new Translation2d(inputPose.getX(), inputPose.getY()),
                 new Rotation2d(inputPose.getHeading()));
     }
+
+    public static Pose2d swapXY(Pose2d inputPose) {
+        return new Pose2d(inputPose.getY(), -inputPose.getX(), inputPose.getHeading());
+    }
+
+    public static Pose2d radiansToDegrees(Pose2d inputPose) {
+        return new Pose2d(inputPose.getX(), inputPose.getY(), (180.0 / Math.PI) * inputPose.getHeading());
+    }
+
+    public static Pose2d degreesToRadians(Pose2d inputPose) {
+        return new Pose2d(inputPose.getX(), inputPose.getY(), (Math.PI / 180.0) * inputPose.getHeading());
+    }
 }

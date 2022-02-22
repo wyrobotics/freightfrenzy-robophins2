@@ -26,6 +26,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
+import com.spartronics4915.lib.T265Camera;
 
 import org.firstinspires.ftc.teamcode.Components.Software.RealsenseLocalizer;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -55,10 +56,10 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
 
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(2, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
 
-    public static double LATERAL_MULTIPLIER = 1;
+    public static double LATERAL_MULTIPLIER = 1.548;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
@@ -106,10 +107,17 @@ public class SampleMecanumDrive extends MecanumDrive {
         // upward (normal to the floor) using a command like the following:
         // BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
 
+        /*
         leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
         leftRear = hardwareMap.get(DcMotorEx.class, "backLeft");
         rightRear = hardwareMap.get(DcMotorEx.class, "backRight");
         rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
+         */
+
+        leftFront = hardwareMap.get(DcMotorEx.class, "frontRight");
+        leftRear = hardwareMap.get(DcMotorEx.class, "backRight");
+        rightRear = hardwareMap.get(DcMotorEx.class, "backLeft");
+        rightFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -131,14 +139,32 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         // TODO: reverse any motors using DcMotor.setDirection()
 
+        /*
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+         */
+
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
 
         //setLocalizer(new RealsenseLocalizer(hardwareMap));
         setLocalizer(new RealsenseLocalizer(hardwareMap));
+
+        //T265Helper.destroyCamera();
+
+        /*
+        Pose2d cameraRobotOffset = new Pose2d(0,0,0);
+        double encoderMeasurementCovariance = 0.8;
+
+        setLocalizer(new T265Localizer(T265Helper.getCamera(
+                                    new T265Camera.OdometryInfo(
+                                            cameraRobotOffset, encoderMeasurementCovariance
+                                    ), hardwareMap.appContext)));
+                                    */
+
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
     }
@@ -326,24 +352,6 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     public static TrajectoryAccelerationConstraint getAccelerationConstraint(double maxAccel) {
         return new ProfileAccelerationConstraint(maxAccel);
-    }
-
-    private void discOrtho(double leftStickX, double leftStickY, double turningPower) {
-
-        double theta = Math.atan2(leftStickY, leftStickX);
-        double magnitude = Math.hypot(leftStickX, leftStickY);
-
-        double flbr = magnitude * Math.cos(theta - (Math.PI / 4));
-        double frbl = magnitude * Math.sin(theta - (Math.PI / 4));
-
-        //double rotChange = Math.min(Math.abs(turningPower),
-        //       Math.min(1 - Math.abs(flbr), 1 - Math.abs(frbl)));
-
-        leftFront.setPower(maxPower * (flbr - turningPower));
-        rightFront.setPower(maxPower * (frbl + turningPower));
-        leftRear.setPower(maxPower * (frbl - turningPower));
-        rightRear.setPower(maxPower * (flbr + turningPower));
-
     }
 
     public void setMaxPower(double power) { maxPower = power; }

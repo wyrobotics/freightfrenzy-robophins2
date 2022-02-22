@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Components.Software;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -18,13 +19,22 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Config
 public class OpenCVSampler {
 
-    private OpenCvCamera camera;
+    public OpenCvWebcam camera;
+
+    public static double REDMAX = 200;
+    public static double REDMIN = 120;
+    public static double GREENMAX = 35;
+    public static double GREENMIN = 5;
+    public static double BLUEMAX = 90;
+    public static double BLUEMIN = 55;
 
     private double contourX = 0;
 
@@ -33,8 +43,11 @@ public class OpenCVSampler {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         //camera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
 
+
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "webcam");
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
+        //camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName);
+
 
     }
 
@@ -45,15 +58,17 @@ public class OpenCVSampler {
             @Override
             public void onOpened()
             {
-                camera.setViewportRenderer(OpenCvCamera.ViewportRenderer.GPU_ACCELERATED);
+                //camera.setViewportRenderer(OpenCvCamera.ViewportRenderer.GPU_ACCELERATED);
+                camera.setPipeline(new OpenCVSampler.Pipeline());
                 camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
                 //GPU acceleration may cause errors -J
 
-                camera.setPipeline(new OpenCVSampler.Pipeline());
+
             }
             @Override
             public void onError(int errorCode)
             {
+                contourX = 69;
                 camera.stopStreaming();
             }
         });
@@ -108,6 +123,7 @@ public class OpenCVSampler {
             //Imgproc.drawContours(input, pinkContours, -1, new Scalar(0,0,200));
 
             contourX = biggestRect.x;
+            //contourX = input.
 
             pinkContours = null;
 
@@ -130,12 +146,12 @@ public class OpenCVSampler {
             List<Mat> channels = new ArrayList<Mat>();
             Core.split(input,channels);
 
-            Imgproc.threshold(channels.get(0), inputRedMin, 120, 255, Imgproc.THRESH_BINARY);
-            Imgproc.threshold(channels.get(0), inputRedMax, 200, 255, Imgproc.THRESH_BINARY_INV);
-            Imgproc.threshold(channels.get(1), inputGreenMin, 5, 255, Imgproc.THRESH_BINARY);
-            Imgproc.threshold(channels.get(1), inputGreenMax, 35, 255, Imgproc.THRESH_BINARY_INV);
-            Imgproc.threshold(channels.get(2), inputBlueMin, 55, 255, Imgproc.THRESH_BINARY);
-            Imgproc.threshold(channels.get(2), inputBlueMax, 90, 255, Imgproc.THRESH_BINARY_INV);
+            Imgproc.threshold(channels.get(0), inputRedMin, REDMIN, 255, Imgproc.THRESH_BINARY);
+            Imgproc.threshold(channels.get(0), inputRedMax, REDMAX, 255, Imgproc.THRESH_BINARY_INV);
+            Imgproc.threshold(channels.get(1), inputGreenMin, GREENMIN, 255, Imgproc.THRESH_BINARY);
+            Imgproc.threshold(channels.get(1), inputGreenMax, GREENMAX, 255, Imgproc.THRESH_BINARY_INV);
+            Imgproc.threshold(channels.get(2), inputBlueMin, BLUEMIN, 255, Imgproc.THRESH_BINARY);
+            Imgproc.threshold(channels.get(2), inputBlueMax, BLUEMAX, 255, Imgproc.THRESH_BINARY_INV);
 
             Core.bitwise_and(inputRedMin, inputGreenMin, pinkMask);
             Core.bitwise_and(inputBlueMin, pinkMask, pinkMask);

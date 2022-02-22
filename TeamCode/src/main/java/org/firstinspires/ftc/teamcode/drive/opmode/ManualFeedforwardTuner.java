@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.Components.MainRobot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.util.Pose2dConversionUtil;
 
 import java.util.Objects;
 
@@ -43,7 +44,7 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
 @Config
 @Autonomous(group = "drive")
 public class ManualFeedforwardTuner extends LinearOpMode {
-    public static double DISTANCE = 72; // in
+    public static double DISTANCE = 48; // in
 
     private FtcDashboard dashboard = FtcDashboard.getInstance();
 
@@ -112,7 +113,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
                     MotionState motionState = activeProfile.get(profileTime);
                     double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), kV, kA, kStatic);
 
-                    drive.setDrivePower(new Pose2d(-targetPower, 0, 0));
+                    drive.setDrivePower(new Pose2d(targetPower, 0, 0));
                     drive.updatePoseEstimate();
 
                     Pose2d poseVelo = Objects.requireNonNull(drive.getPoseVelocity(), "poseVelocity() must not be null. Ensure that the getWheelVelocities() method has been overridden in your localizer.");

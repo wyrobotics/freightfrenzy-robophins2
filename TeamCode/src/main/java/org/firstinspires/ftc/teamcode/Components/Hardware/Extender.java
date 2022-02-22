@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Extender {
 
     private DcMotor extender;
-    private Servo rotator;
+    public Servo rotator;
     private Servo releaser;
 
     public DigitalChannel inSwitch;
@@ -22,6 +22,7 @@ public class Extender {
     private TouchSensor outSwitch;
 
     static public double maxRotatorPosition = 0.9;
+    static public double minRotatorPosition = 0.3;
     public double rotatorPosition = maxRotatorPosition;
 
     public Extender(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -54,6 +55,11 @@ public class Extender {
         extender.setPower(finalPower);
     }
 
+    public void changeRotatorPosition(double d) {
+        rotatorPosition = Math.max(minRotatorPosition, Math.min(maxRotatorPosition,rotatorPosition+d));
+        rotator.setPosition(rotatorPosition);
+    }
+
     public void increaseRotatorPosition() {
         //rotator.setPosition(rotator.getPosition() + 0.00001);
         rotatorPosition = Math.min(maxRotatorPosition, rotatorPosition + 0.005);
@@ -61,11 +67,11 @@ public class Extender {
     }
     public void decreaseRotatorPosition() {
         //rotator.setPosition(rotator.getPosition() - 0.00001);
-        rotatorPosition = Math.min(rotatorPosition, rotatorPosition - 0.005);
+        rotatorPosition = Math.min(minRotatorPosition, rotatorPosition - 0.005);
         rotator.setPosition(rotatorPosition);
     }
 
     public void openReleaser() { releaser.setPosition(0.95); }
-    public void closeReleaser() { releaser.setPosition(0.72); }
+    public void closeReleaser() { releaser.setPosition(0.74); }
 
 }
