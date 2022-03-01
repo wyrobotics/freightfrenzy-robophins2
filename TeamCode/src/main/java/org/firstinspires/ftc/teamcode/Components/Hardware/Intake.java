@@ -17,7 +17,7 @@ public class Intake {
     ColorSensor rightSensor;
     ColorSensor leftSensor;
 
-    public class Color {
+    public static class Color {
 
         public double red, green, blue;
 
@@ -26,6 +26,11 @@ public class Intake {
         }
 
         public String print() { return red + " " + green + " " + blue; }
+
+        public boolean threshold(double red, double green, double blue) { return (this.red >= red) && (this.green >= green) && (this.blue >= blue); }
+        public boolean threshold(double r1, double r2, double g1, double g2, double b1, double b2) { return threshold(r1, g1, b1) && !threshold(r2, g2, b2); }
+        public boolean threshold(Color color) { return threshold(color.red, color.green, color.blue); }
+        public boolean threshold(Color bottomColor, Color topColor) { return threshold(bottomColor) && !threshold(topColor); }
 
     }
 

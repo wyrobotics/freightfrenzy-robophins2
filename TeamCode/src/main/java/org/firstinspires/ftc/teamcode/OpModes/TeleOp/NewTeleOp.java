@@ -78,7 +78,8 @@ public class NewTeleOp extends LinearOpMode {
             }
              */
 
-            if(gamepad1.a) {
+            if(mainRobot.leftFlushing || mainRobot.rightFlushing) { }
+            else if(gamepad1.a) {
                 mainRobot.intake.leftSlapIn();
                 mainRobot.intake.rightSlapIn();
             } else {
@@ -113,14 +114,16 @@ public class NewTeleOp extends LinearOpMode {
                 else if(gamepad1.left_bumper) mainRobot.spinner.spin(-0.8);
                 else mainRobot.spinner.spin(0);
 
-                mainRobot.intake.setRightPower(0);
-                mainRobot.intake.setLeftPower(0);
+                if(!mainRobot.leftFlushing) mainRobot.intake.setRightPower(0);
+                if(!mainRobot.rightFlushing) mainRobot.intake.setLeftPower(0);
             } else {
-                if (gamepad1.right_bumper) mainRobot.intake.setRightPower(1);
+                if(mainRobot.rightFlushing) { }
+                else if (gamepad1.right_bumper) mainRobot.intake.setRightPower(1);
                 else if (gamepad1.right_trigger > 0.05) mainRobot.intake.setRightPower(-1);
                 else mainRobot.intake.setRightPower(0);
 
-                if (gamepad1.left_bumper) mainRobot.intake.setLeftPower(-1);
+                if(mainRobot.leftFlushing) { }
+                else if (gamepad1.left_bumper) mainRobot.intake.setLeftPower(-1);
                 else if (gamepad1.left_trigger > 0.05) mainRobot.intake.setLeftPower(1);
                 else mainRobot.intake.setLeftPower(0);
 
@@ -188,14 +191,18 @@ public class NewTeleOp extends LinearOpMode {
                 aPressed = false;
 
 
-            //telemetry.addData("Rotator: ", mainRobot.extender.rotatorPosition);
-            //telemetry.addData("Up Switch Pressed? : ", mainRobot.lifter.upSwitch.isPressed());
-            telemetry.addData("In switch: ", mainRobot.extender.inSwitch.getState());
-            telemetry.addData("Field centric? ", fieldCentric);
-            telemetry.addData("X: ", mainRobot.getPoseEstimate().getX());
-            telemetry.addData("Y: ", mainRobot.getPoseEstimate().getY());
-            telemetry.addData("Heading: ", mainRobot.getPoseEstimate().getHeading());
-            telemetry.addData("Rotator: ", mainRobot.extender.rotatorPosition);
+
+
+
+            //PLAYER 0
+
+            mainRobot.flushLeftIntake();
+            mainRobot.flushRightIntake();
+
+            telemetry.addData("Colors: ", mainRobot.intake.getLeftColor().print());
+            telemetry.addData("Left intake?: ",
+                    mainRobot.intake.getLeftColor().threshold(mainRobot.cubeColor) ||
+                    mainRobot.intake.getLeftColor().threshold(mainRobot.sphereColor));
             telemetry.update();
 
         }
