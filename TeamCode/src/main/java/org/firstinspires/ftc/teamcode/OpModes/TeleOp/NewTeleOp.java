@@ -52,7 +52,7 @@ public class NewTeleOp extends LinearOpMode {
 
             double heading = mainRobot.getPoseEstimate().getHeading();
 
-            double stickX = -gamepad1.left_stick_y, stickY = gamepad1.left_stick_x;
+            double stickX = -gamepad1.left_stick_y, stickY = -gamepad1.left_stick_x;
 
             if(fieldCentric) {
 
@@ -62,7 +62,7 @@ public class NewTeleOp extends LinearOpMode {
                     gamepad1.right_stick_x));
 
             } else {
-                mainRobot.setWeightedDrivePower(new Pose2d(-stickY, -stickX, -gamepad1.right_stick_x));
+                mainRobot.setWeightedDrivePower(new Pose2d(stickY, stickX, gamepad1.right_stick_x));
             }
 
 
@@ -78,7 +78,7 @@ public class NewTeleOp extends LinearOpMode {
             }
              */
 
-            if(!gamepad1.a) {
+            if(gamepad1.a) {
                 mainRobot.intake.leftSlapIn();
                 mainRobot.intake.rightSlapIn();
             } else {

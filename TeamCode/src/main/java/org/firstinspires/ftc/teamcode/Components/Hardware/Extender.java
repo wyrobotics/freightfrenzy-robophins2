@@ -22,8 +22,8 @@ public class Extender {
     private TouchSensor outSwitch;
 
     static public double maxRotatorPosition = 0.9;
-    static public double minRotatorPosition = 0.3;
-    public double rotatorPosition = maxRotatorPosition;
+    static public double minRotatorPosition = 0.32;
+    public double rotatorPosition = minRotatorPosition;
 
     public Extender(HardwareMap hardwareMap, Telemetry telemetry) {
 
@@ -56,7 +56,7 @@ public class Extender {
     }
 
     public void changeRotatorPosition(double d) {
-        rotatorPosition = Math.max(minRotatorPosition, Math.min(maxRotatorPosition,rotatorPosition+d));
+        rotatorPosition = Math.max(minRotatorPosition, Math.min(maxRotatorPosition,rotatorPosition-d));
         rotator.setPosition(rotatorPosition);
     }
 

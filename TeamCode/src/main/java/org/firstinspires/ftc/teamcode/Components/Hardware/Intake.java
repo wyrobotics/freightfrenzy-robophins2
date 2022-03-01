@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Components.Hardware;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -13,6 +14,21 @@ public class Intake {
     Servo leftIntakeSlapper;
     Servo rightIntakeSlapper;
 
+    ColorSensor rightSensor;
+    ColorSensor leftSensor;
+
+    public class Color {
+
+        public double red, green, blue;
+
+        public Color(double red, double green, double blue) {
+            this.red = red; this.green = green; this.blue = blue;
+        }
+
+        public String print() { return red + " " + green + " " + blue; }
+
+    }
+
     public Intake(HardwareMap hardwareMap, Telemetry telemetry) {
 
         leftIntake = hardwareMap.get(DcMotor.class, "leftIntake");
@@ -23,6 +39,9 @@ public class Intake {
 
         leftIntakeSlapper = hardwareMap.get(Servo.class, "leftIntakeSlapper");
         rightIntakeSlapper = hardwareMap.get(Servo.class, "rightIntakeSlapper");
+
+        rightSensor = hardwareMap.get(ColorSensor.class, "rightSensor");
+        leftSensor = hardwareMap.get(ColorSensor.class, "leftSensor");
 
     }
 
@@ -41,5 +60,8 @@ public class Intake {
     public void rightSlap(double pos) { rightIntakeSlapper.setPosition(pos); }
     public void rightSlapIn() { rightSlap(0.55); }
     public void rightSlapOut() { rightSlap(0.0); }
+
+    public Color getRightColor() { return new Color(rightSensor.red(), rightSensor.green(), rightSensor.blue()); }
+    public Color getLeftColor() { return new Color(leftSensor.red(), leftSensor.green(), leftSensor.blue()); }
 
 }
