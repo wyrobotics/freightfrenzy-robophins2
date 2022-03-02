@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.Components.Hardware.Extender;
 import org.firstinspires.ftc.teamcode.Components.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Components.Hardware.Shooter;
 import org.firstinspires.ftc.teamcode.Components.Hardware.Spinner;
+import org.firstinspires.ftc.teamcode.Components.Hardware.Lighting;
 import org.firstinspires.ftc.teamcode.Components.Software.OpenCVSampler;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Components.Software.RealsenseLocalizer;
@@ -22,6 +23,9 @@ public class MainRobot extends SampleMecanumDrive {
     public Intake intake;
     public Spinner spinner;
     public Shooter shooter;
+
+    public Lighting lighting;
+
     public OpenCVSampler openCVSampler;
 
     public Intake.Color cubeColor = new Intake.Color(150,90,50);
@@ -40,6 +44,8 @@ public class MainRobot extends SampleMecanumDrive {
         spinner = new Spinner(hardwareMap, telemetry);
         shooter = new Shooter(hardwareMap, telemetry);
 
+        lighting = new Lighting(hardwareMap, telemetry);
+
         openCVSampler = new OpenCVSampler(hardwareMap, telemetry);
 
     }
@@ -51,13 +57,17 @@ public class MainRobot extends SampleMecanumDrive {
     public void flushLeftIntake() {
 
         if(!(intake.getLeftColor().threshold(cubeColor) || intake.getLeftColor().threshold(sphereColor))) return;
-        if(leftFlushing) return;
+        if(leftFlushing) {
+            lighting.signalNoFreight();
+            return;
+        }
 
         ExecutorService flushExecutor = ThreadPool.newSingleThreadExecutor("Left Flush");
         flushExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 leftFlushing = true;
+                lighting.signalFreightReceived();
                 for(int i = 0; i < 1; i++) {
                     extender.openReleaser();
                     intake.setLeftPower(flushPower);
@@ -69,6 +79,7 @@ public class MainRobot extends SampleMecanumDrive {
                     //if(Thread.currentThread().isInterrupted()) return;
                 }
                 intake.setLeftPower(0);
+                lighting.signalNoFreight();
                 leftFlushing = false;
             }
         });
@@ -78,13 +89,17 @@ public class MainRobot extends SampleMecanumDrive {
     public void flushRightIntake() {
 
         if(!(intake.getRightColor().threshold(cubeColor) || intake.getRightColor().threshold(sphereColor))) return;
-        if(rightFlushing) return;
+        if(rightFlushing) {
+            lighting.signalNoFreight();
+            return;
+        }
 
         ExecutorService flushExecutor = ThreadPool.newSingleThreadExecutor("Right Flush");
         flushExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 rightFlushing = true;
+                lighting.signalFreightReceived();
                 for(int i = 0; i < 1; i++) {
                     extender.openReleaser();
                     intake.setRightPower(-flushPower);
@@ -96,6 +111,7 @@ public class MainRobot extends SampleMecanumDrive {
                     //if(Thread.currentThread().isInterrupted()) return;
                 }
                 intake.setRightPower(0);
+                lighting.signalNoFreight();
                 rightFlushing = false;
             }
         });

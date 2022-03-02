@@ -15,6 +15,9 @@ public class NewTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() {
 
+        boolean autoIntake = true;
+        boolean p1xPressed = false;
+
         boolean fieldCentric = false;
         boolean back = false;
 
@@ -31,6 +34,9 @@ public class NewTeleOp extends LinearOpMode {
         boolean player1y = false;
 
         mainRobot = new MainRobot(hardwareMap, telemetry);
+
+        //mainRobot.led.set(1825);
+        //my name is julian and i pee pee poo poo
 
         waitForStart();
         while(opModeIsActive()) {
@@ -130,7 +136,13 @@ public class NewTeleOp extends LinearOpMode {
                 mainRobot.spinner.spin(0);
             }
 
-
+            if(gamepad1.x && !p1xPressed) {
+                autoIntake = !autoIntake;
+                p1xPressed = true;
+            }
+            if(!gamepad1.x && p1xPressed) {
+                p1xPressed = false;
+            }
 
 
 
@@ -196,8 +208,10 @@ public class NewTeleOp extends LinearOpMode {
 
             //PLAYER 0
 
-            mainRobot.flushLeftIntake();
-            mainRobot.flushRightIntake();
+            if(autoIntake) {
+                mainRobot.flushLeftIntake();
+                mainRobot.flushRightIntake();
+            } else mainRobot.lighting.signalAutoIntakeOff();
 
             telemetry.addData("Colors: ", mainRobot.intake.getLeftColor().print());
             telemetry.addData("Left intake?: ",
