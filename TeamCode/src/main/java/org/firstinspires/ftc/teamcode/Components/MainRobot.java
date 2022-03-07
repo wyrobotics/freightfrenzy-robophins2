@@ -28,8 +28,8 @@ public class MainRobot extends SampleMecanumDrive {
 
     public OpenCVSampler openCVSampler;
 
-    public Intake.Color cubeColor = new Intake.Color(150,90,50);
-    public Intake.Color sphereColor = new Intake.Color(150,150,150);
+    public Intake.Color cubeColor = new Intake.Color(75,55,35);
+    public Intake.Color sphereColor = new Intake.Color(150,110,150);
 
     public volatile boolean leftFlushing = false;
     public volatile boolean rightFlushing = false;
@@ -51,7 +51,7 @@ public class MainRobot extends SampleMecanumDrive {
     }
 
     public static double flushPower = 1;
-    public static double flushTime = 250;
+    public static double flushTime = 100;
     public static double sweepTime = 1000;
 
     public void flushLeftIntake() {
@@ -70,6 +70,8 @@ public class MainRobot extends SampleMecanumDrive {
                 lighting.signalFreightReceived();
                 for(int i = 0; i < 1; i++) {
                     extender.openReleaser();
+                    pause(300);
+                    if (Thread.currentThread().isInterrupted()) break;
                     intake.setLeftPower(flushPower);
                     pause((long) flushTime);
                     if (Thread.currentThread().isInterrupted()) break;
@@ -102,6 +104,8 @@ public class MainRobot extends SampleMecanumDrive {
                 lighting.signalFreightReceived();
                 for(int i = 0; i < 1; i++) {
                     extender.openReleaser();
+                    pause(300);
+                    if (Thread.currentThread().isInterrupted()) break;
                     intake.setRightPower(-flushPower);
                     pause((long) flushTime);
                     if (Thread.currentThread().isInterrupted()) break;

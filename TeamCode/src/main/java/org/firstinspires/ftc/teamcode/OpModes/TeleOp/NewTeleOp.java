@@ -32,13 +32,19 @@ public class NewTeleOp extends LinearOpMode {
         boolean dpadRight = false;
         boolean player2y = false;
         boolean player1y = false;
+        boolean p1a = false;
 
         mainRobot = new MainRobot(hardwareMap, telemetry);
 
         //mainRobot.led.set(1825);
         //my name is julian and i pee pee poo poo
 
+        long cycleNum = 1;
+
+
+
         waitForStart();
+        mainRobot.lighting.signalNoFreight();
         while(opModeIsActive()) {
 
             //PLAYER 1
@@ -58,7 +64,7 @@ public class NewTeleOp extends LinearOpMode {
 
             double heading = mainRobot.getPoseEstimate().getHeading();
 
-            double stickX = -gamepad1.left_stick_y, stickY = -gamepad1.left_stick_x;
+            double stickX = gamepad1.left_stick_y, stickY = -gamepad1.left_stick_x;
 
             if(fieldCentric) {
 
@@ -68,7 +74,7 @@ public class NewTeleOp extends LinearOpMode {
                     gamepad1.right_stick_x));
 
             } else {
-                mainRobot.setWeightedDrivePower(new Pose2d(stickY, stickX, gamepad1.right_stick_x));
+                mainRobot.setWeightedDrivePower(new Pose2d(stickY, stickX, -gamepad1.right_stick_x));
             }
 
 
@@ -85,12 +91,14 @@ public class NewTeleOp extends LinearOpMode {
              */
 
             if(mainRobot.leftFlushing || mainRobot.rightFlushing) { }
-            else if(gamepad1.a) {
+            else if(gamepad1.a && !p1a) {
                 mainRobot.intake.leftSlapIn();
                 mainRobot.intake.rightSlapIn();
-            } else {
+                p1a = true;
+            } else if(!gamepad1.a && p1a) {
                 mainRobot.intake.leftSlapOut();
                 mainRobot.intake.rightSlapOut();
+                p1a = false;
             }
 
             if(!bPressed && gamepad1.b) {
@@ -138,6 +146,7 @@ public class NewTeleOp extends LinearOpMode {
 
             if(gamepad1.x && !p1xPressed) {
                 autoIntake = !autoIntake;
+                if(autoIntake) mainRobot.lighting.signalNoFreight();
                 p1xPressed = true;
             }
             if(!gamepad1.x && p1xPressed) {
@@ -178,11 +187,18 @@ public class NewTeleOp extends LinearOpMode {
             if(!armLayer) {
                 mainRobot.shooter.yassify(-gamepad2.left_stick_x);
                 mainRobot.shooter.pitchy(gamepad2.left_stick_y);
-                mainRobot.shooter.shoot(gamepad2.right_stick_y);
+                if(Math.abs(gamepad2.right_stick_y) > 0.1)
+                    mainRobot.shooter.shoot(gamepad2.right_stick_y);
+                else mainRobot.shooter.shoot(0);
                 mainRobot.extender.setExtenderPower(0);
             } else {
                 mainRobot.extender.setExtenderPower(-gamepad2.left_stick_y);
-                mainRobot.extender.changeRotatorPosition(gamepad2.right_stick_y / 150.0);
+                if(Math.abs(gamepad2.left_stick_y) > 0.1) {
+                    mainRobot.intake.leftSlapOut();
+                    mainRobot.intake.rightSlapOut();
+                }
+                if(Math.abs(gamepad2.right_stick_y) > 0.1)
+                    mainRobot.extender.changeRotatorPosition(gamepad2.right_stick_y / 18.0);
                 mainRobot.shooter.yassify(0);
                 mainRobot.shooter.pitchy(0);
                 mainRobot.shooter.shoot(0);
@@ -208,16 +224,23 @@ public class NewTeleOp extends LinearOpMode {
 
             //PLAYER 0
 
-            if(autoIntake) {
+            if(autoIntake && cycleNum % 8 == 0) {
                 mainRobot.flushLeftIntake();
                 mainRobot.flushRightIntake();
-            } else mainRobot.lighting.signalAutoIntakeOff();
+                cycleNum = 0;
+            }
+            if(!autoIntake) {
+                mainRobot.lighting.signalAutoIntakeOff();
+            }
 
+            telemetry.addData("Auto Intake?: ", autoIntake);
             telemetry.addData("Colors: ", mainRobot.intake.getLeftColor().print());
             telemetry.addData("Left intake?: ",
                     mainRobot.intake.getLeftColor().threshold(mainRobot.cubeColor) ||
                     mainRobot.intake.getLeftColor().threshold(mainRobot.sphereColor));
             telemetry.update();
+
+            cycleNum++;
 
         }
 

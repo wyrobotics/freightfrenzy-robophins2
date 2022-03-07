@@ -63,8 +63,8 @@ public class Intake {
     public void leftSlapOut() { leftSlap(1); }
 
     public void rightSlap(double pos) { rightIntakeSlapper.setPosition(pos); }
-    public void rightSlapIn() { rightSlap(0.55); }
-    public void rightSlapOut() { rightSlap(0.0); }
+    public void rightSlapIn() { rightSlap(0.58); }
+    public void rightSlapOut() { rightSlap(0.03); }
 
     public Color getRightColor() { return new Color(rightSensor.red(), rightSensor.green(), rightSensor.blue()); }
     public Color getLeftColor() { return new Color(leftSensor.red(), leftSensor.green(), leftSensor.blue()); }

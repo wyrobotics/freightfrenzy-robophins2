@@ -39,7 +39,7 @@ public class Shooter {
     public void yassify(double power) {
         //if(Math.abs(power) > 0.2) yaw.setPower(power);
         //else yaw.setPower(0);
-        yaw.setPower(power * 0.2);
+        yaw.setPower(power * 0.25);
     }
 
     public void pitchy(double power) {

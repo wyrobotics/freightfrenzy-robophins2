@@ -22,7 +22,7 @@ public class Extender {
     private TouchSensor outSwitch;
 
     static public double maxRotatorPosition = 0.9;
-    static public double minRotatorPosition = 0.32;
+    static public double minRotatorPosition = 0.29;
     public double rotatorPosition = minRotatorPosition;
 
     public Extender(HardwareMap hardwareMap, Telemetry telemetry) {

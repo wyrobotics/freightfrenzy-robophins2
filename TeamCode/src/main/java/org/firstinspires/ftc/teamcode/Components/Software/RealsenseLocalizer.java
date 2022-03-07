@@ -24,7 +24,7 @@ public class RealsenseLocalizer implements Localizer {
     //  Use the normal coordinate system the field uses.
     public static Transform2d cameraRobotOffset = Pose2dConversionUtil.toTransform2d(
             Pose2dConversionUtil.inchesToMeters(
-                    new Pose2d(-9.0, -8.25)));
+                    new Pose2d(-7.0, -1)));
     public double encoderMeasurementCovariance = 0;
 
     //private final T265Camera slamera;

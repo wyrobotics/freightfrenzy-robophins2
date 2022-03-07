@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.Autonomous;
+package org.firstinspires.ftc.teamcode.OpModes.Autonomous.Legacy;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -9,11 +9,11 @@ import org.firstinspires.ftc.teamcode.Components.MainRobot;
 
 @Config
 @Autonomous
-public class DuckSpinDepoRed extends LinearOpMode {
+public class DuckSpinDepoBlue extends LinearOpMode {
 
     MainRobot mainRobot;
 
-    public static double forwardDistance = 6;
+    public static double forwardDistance = 5;
     public static double strafeToDisk = 12;
 
     @Override

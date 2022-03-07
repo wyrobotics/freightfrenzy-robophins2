@@ -29,12 +29,22 @@ public class OpenCVSampler {
 
     public OpenCvWebcam camera;
 
-    public static double REDMAX = 200;
-    public static double REDMIN = 120;
-    public static double GREENMAX = 35;
-    public static double GREENMIN = 5;
+    /*
+    PINK
+    public static double REDMAX = 255;
+    public static double REDMIN = 150;
+    public static double GREENMAX = 150;
+    public static double GREENMIN = 70;
+    public static double BLUEMAX = 190;
+    public static double BLUEMIN = 120;
+     */
+
+    public static double REDMAX = 110;
+    public static double REDMIN = 60;
+    public static double GREENMAX = 200;
+    public static double GREENMIN = 140;
     public static double BLUEMAX = 90;
-    public static double BLUEMIN = 55;
+    public static double BLUEMIN = 60;
 
     private double contourX = 0;
 
@@ -47,7 +57,6 @@ public class OpenCVSampler {
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "webcam");
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
         //camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName);
-
 
     }
 
@@ -69,6 +78,7 @@ public class OpenCVSampler {
             public void onError(int errorCode)
             {
                 contourX = 69;
+
                 camera.stopStreaming();
             }
         });

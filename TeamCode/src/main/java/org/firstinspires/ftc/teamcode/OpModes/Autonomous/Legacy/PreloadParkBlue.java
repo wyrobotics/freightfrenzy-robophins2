@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode.OpModes.Autonomous;
+package org.firstinspires.ftc.teamcode.OpModes.Autonomous.Legacy;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -8,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Components.MainRobot;
 
 @Config
 @Autonomous
-public class PreloadPark extends LinearOpMode {
+public class PreloadParkBlue extends LinearOpMode {
 
     MainRobot mainRobot;
 
@@ -61,6 +62,10 @@ public class PreloadPark extends LinearOpMode {
         mainRobot.pause(400);
         mainRobot.extender.closeReleaser();
         mainRobot.pause(1000);
+        mainRobot.setWeightedDrivePower(new Pose2d(0.5,0,0));
+        mainRobot.pause(2000);
+        mainRobot.setWeightedDrivePower(new Pose2d());
+        mainRobot.pause(200);
 
 
     }
