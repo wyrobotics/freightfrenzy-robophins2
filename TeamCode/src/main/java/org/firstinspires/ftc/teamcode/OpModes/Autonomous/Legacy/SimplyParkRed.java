@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Components.MainRobot;
 
-@Autonomous
 public class SimplyParkRed extends LinearOpMode {
 
     MainRobot mainRobot;

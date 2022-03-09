@@ -2,15 +2,18 @@ package org.firstinspires.ftc.teamcode.OpModes.Autonomous;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Components.MainRobot;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
 @Autonomous
-public class BlueCycle extends LinearOpMode {
+public class BlueDuck extends LinearOpMode {
 
     MainRobot mainRobot;
 
@@ -18,7 +21,7 @@ public class BlueCycle extends LinearOpMode {
     public static long firstExtend = 400;
     public static double firstExtendPower = 0.8;
     public static double raiseInc = 0.45 / 3;
-    public static long raiseTime = 500;
+    public static long raiseTime = 1000;
     public static double[] raise = new double[] {0.0,0.45,0.57,0.72};
     //public static long secondExtend = 200;
     public static long[] secondExtend = new long[] {0,500,400,470};
@@ -33,22 +36,22 @@ public class BlueCycle extends LinearOpMode {
         Pose2d startPose = mainRobot.getPoseEstimate();
 
         Trajectory firstBack = mainRobot.trajectoryBuilder(startPose)
-                .back(firstBackwardDistance)
+                .splineToLinearHeading(new Pose2d(-18,-3,-0.5),0,
+                        SampleMecanumDrive.getVelocityConstraint(10,DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory secondForward = mainRobot.trajectoryBuilder(firstBack.end())
-                .forward(68)
+                .splineToLinearHeading(new Pose2d(firstBack.end().getX()+44,firstBack.end().getY()+3,0),0,
+                        SampleMecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
-        Trajectory thirdBack = mainRobot.trajectoryBuilder(secondForward.end())
-                .back(68)
+        Trajectory thirdForward = mainRobot.trajectoryBuilder(secondForward.end())
+                .forward(60)
                 .build();
 
-        Trajectory fourthForward = mainRobot.trajectoryBuilder(thirdBack.end())
-                .forward(68)
-                .build();
-
-        Trajectory adjust = mainRobot.trajectoryBuilder(secondForward.end())
+        Trajectory adjust = mainRobot.trajectoryBuilder(thirdForward.end())
                 .strafeRight(26)
                 .build();
 
@@ -71,47 +74,15 @@ public class BlueCycle extends LinearOpMode {
         mainRobot.pause(300);
 
         mainRobot.followTrajectory(firstBack);
-        mainRobot.pause(300);
-
-        mainRobot.extender.setExtenderPower(firstExtendPower);
-        mainRobot.pause(firstExtend);
-        mainRobot.extender.setExtenderPower(0.0);
-
-        mainRobot.extender.rotator.setPosition(raise[level]);
-        mainRobot.pause(raiseTime);
-
-        mainRobot.extender.setExtenderPower(secondExtendPower);
-        mainRobot.pause(secondExtend[level]);
-        mainRobot.extender.setExtenderPower(0.0);
         mainRobot.pause(500);
 
-        mainRobot.extender.openReleaser();
-        mainRobot.pause(500);
-
-        mainRobot.extender.closeReleaser();
-        mainRobot.pause(200);
-        mainRobot.extender.setExtenderPower(-0.8);
-        mainRobot.pause(400);
-        while(mainRobot.extender.inSwitch.getState()) {
-            mainRobot.extender.rotator.setPosition(0.32);
-        }
-        mainRobot.extender.setExtenderPower(0);
-
+        mainRobot.spinner.spin(1);
+        mainRobot.pause(4000);
+        mainRobot.spinner.spin(0);
         mainRobot.pause(500);
 
         mainRobot.followTrajectory(secondForward);
-
-        mainRobot.pause(500);
-
-        mainRobot.intake.setLeftPower(-1);
-        while(!mainRobot.leftFlushing) mainRobot.flushLeftIntake();
-        mainRobot.pause(2000);
-        mainRobot.extender.closeReleaser();
-        mainRobot.pause(500);
-
-        mainRobot.followTrajectory(thirdBack);
-        mainRobot.pause(500);
-        level = 3;
+        mainRobot.pause(1000);
 
         mainRobot.extender.setExtenderPower(firstExtendPower);
         mainRobot.pause(firstExtend);
@@ -126,7 +97,7 @@ public class BlueCycle extends LinearOpMode {
         mainRobot.pause(500);
 
         mainRobot.extender.openReleaser();
-        mainRobot.pause(500);
+        mainRobot.pause(1000);
 
         mainRobot.extender.closeReleaser();
         mainRobot.pause(200);
@@ -137,12 +108,11 @@ public class BlueCycle extends LinearOpMode {
         }
         mainRobot.extender.setExtenderPower(0);
 
-        mainRobot.pause(500);
+        mainRobot.pause(1000);
 
-        mainRobot.followTrajectory(fourthForward);
+        mainRobot.followTrajectory(thirdForward);
 
-        mainRobot.pause(500);
-
+        mainRobot.pause(1000);
 
     }
 

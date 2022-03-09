@@ -7,8 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Components.MainRobot;
 
-@Config
-@Autonomous
 public class PreloadParkRed extends LinearOpMode {
 
     MainRobot mainRobot;

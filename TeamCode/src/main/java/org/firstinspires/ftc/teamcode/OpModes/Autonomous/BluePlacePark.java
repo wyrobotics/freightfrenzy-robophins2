@@ -17,12 +17,13 @@ public class BluePlacePark extends LinearOpMode {
     public static double firstBackwardDistance = 24;
     public static long firstExtend = 400;
     public static double firstExtendPower = 0.8;
-    public static double raiseInc = 0.4 / 3;
+    public static double raiseInc = 0.45 / 3;
     public static long raiseTime = 1000;
-    public static long secondExtend = 400;
+    public static double[] raise = new double[] {0.0,0.45,0.57,0.72};
+    //public static long secondExtend = 200;
+    public static long[] secondExtend = new long[] {0,500,400,470};
     public static double secondExtendPower = 0.8;
     public static long releaseTime = 1000;
-
 
     @Override
     public void runOpMode() {
@@ -68,11 +69,11 @@ public class BluePlacePark extends LinearOpMode {
         mainRobot.pause(firstExtend);
         mainRobot.extender.setExtenderPower(0.0);
 
-        mainRobot.extender.rotator.setPosition(0.2 + (level * raiseInc));
+        mainRobot.extender.rotator.setPosition(raise[level]);
         mainRobot.pause(raiseTime);
 
         mainRobot.extender.setExtenderPower(secondExtendPower);
-        mainRobot.pause(secondExtend + (100 * level));
+        mainRobot.pause(secondExtend[level]);
         mainRobot.extender.setExtenderPower(0.0);
         mainRobot.pause(500);
 

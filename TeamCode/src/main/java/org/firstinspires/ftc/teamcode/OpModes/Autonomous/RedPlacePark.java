@@ -14,15 +14,16 @@ public class RedPlacePark extends LinearOpMode {
 
     MainRobot mainRobot;
 
-    public static double firstBackwardDistance = 24;
+    public static double firstForwardDistance = 24;
     public static long firstExtend = 400;
     public static double firstExtendPower = 0.8;
-    public static double raiseInc = 0.5 / 3;
+    public static double raiseInc = 0.45 / 3;
     public static long raiseTime = 1000;
-    public static long secondExtend = 400;
+    public static double[] raise = new double[] {0.0,0.4,0.57,0.72};
+    //public static long secondExtend = 200;
+    public static long[] secondExtend = new long[] {0,400,400,500};
     public static double secondExtendPower = 0.8;
     public static long releaseTime = 1000;
-
 
     @Override
     public void runOpMode() {
@@ -32,11 +33,11 @@ public class RedPlacePark extends LinearOpMode {
         Pose2d startPose = mainRobot.getPoseEstimate();
 
         Trajectory firstForward = mainRobot.trajectoryBuilder(startPose)
-                .forward(firstBackwardDistance)
+                .back(firstForwardDistance)
                 .build();
 
         Trajectory secondBack = mainRobot.trajectoryBuilder(firstForward.end())
-                .back(60)
+                .forward(60)
                 .build();
 
         Trajectory adjust = mainRobot.trajectoryBuilder(secondBack.end())
@@ -52,7 +53,7 @@ public class RedPlacePark extends LinearOpMode {
         if(markerPos < 50) level = 1;
         else if(markerPos < 110) level = 3;
         else level = 2;
-        level = 3;
+
 
         telemetry.addData("Level: ", level);
         telemetry.addData("Pink: ", mainRobot.openCVSampler.getPinkX());
@@ -68,11 +69,11 @@ public class RedPlacePark extends LinearOpMode {
         mainRobot.pause(firstExtend);
         mainRobot.extender.setExtenderPower(0.0);
 
-        mainRobot.extender.rotator.setPosition(0.2 + (level * raiseInc));
+        mainRobot.extender.rotator.setPosition(raise[level]);
         mainRobot.pause(raiseTime);
 
         mainRobot.extender.setExtenderPower(secondExtendPower);
-        mainRobot.pause(secondExtend + (100 * level));
+        mainRobot.pause(secondExtend[level]);
         mainRobot.extender.setExtenderPower(0.0);
         mainRobot.pause(500);
 
