@@ -85,6 +85,11 @@ public class OpenCVSampler {
 
     }
 
+    public void closeOpenCVCamera() {
+        camera.stopStreaming();
+        camera.closeCameraDevice();
+    }
+
     public double getPinkX(double trials) {
 
         double total = 0;

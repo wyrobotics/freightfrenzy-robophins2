@@ -19,9 +19,9 @@ public class BluePlacePark extends LinearOpMode {
     public static double firstExtendPower = 0.8;
     public static double raiseInc = 0.45 / 3;
     public static long raiseTime = 1000;
-    public static double[] raise = new double[] {0.0,0.45,0.57,0.72};
+    public static double[] raise = new double[] {0.0,0.5,0.57,0.72};
     //public static long secondExtend = 200;
-    public static long[] secondExtend = new long[] {0,500,400,470};
+    public static long[] secondExtend = new long[] {0,450,400,470};
     public static double secondExtendPower = 0.8;
     public static long releaseTime = 1000;
 
@@ -51,13 +51,15 @@ public class BluePlacePark extends LinearOpMode {
         double markerPos = mainRobot.openCVSampler.getPinkX();
         int level;
         if(markerPos < 50) level = 1;
-        else if(markerPos < 110) level = 3;
+        else if(markerPos < 140) level = 3;
         else level = 2;
 
 
         telemetry.addData("Level: ", level);
         telemetry.addData("Pink: ", mainRobot.openCVSampler.getPinkX());
         telemetry.update();
+
+        mainRobot.openCVSampler.closeOpenCVCamera();
 
         mainRobot.extender.closeReleaser();
         mainRobot.pause(300);
