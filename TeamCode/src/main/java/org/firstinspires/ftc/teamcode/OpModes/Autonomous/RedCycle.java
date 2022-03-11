@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
 @Autonomous
-public class BlueCycle extends LinearOpMode {
+public class RedCycle extends LinearOpMode {
 
     MainRobot mainRobot;
 
@@ -35,30 +35,30 @@ public class BlueCycle extends LinearOpMode {
 
         Pose2d startPose = mainRobot.getPoseEstimate();
 
-        Trajectory firstBack = mainRobot.trajectoryBuilder(startPose)
-                .back(firstBackwardDistance)
+        Trajectory firstForward = mainRobot.trajectoryBuilder(startPose)
+                .forward(firstBackwardDistance)
                 .build();
 
-        Trajectory secondForward = mainRobot.trajectoryBuilder(firstBack.end())
-                .forward(60)
+        Trajectory secondBack = mainRobot.trajectoryBuilder(firstForward.end())
+                .back(60)
                 .build();
 
-        Trajectory wiggle1 = mainRobot.trajectoryBuilder(secondForward.end())
-                .splineToLinearHeading(new Pose2d(secondForward.end().getX()+1,
-                        secondForward.end().getY(), -0.5),0,
+        Trajectory wiggle1 = mainRobot.trajectoryBuilder(secondBack.end())
+                .splineToLinearHeading(new Pose2d(secondBack.end().getX()-1,
+                                secondBack.end().getY(), -0.5),0,
                         SampleMecanumDrive.getVelocityConstraint(10,1, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(10) )
+                        SampleMecanumDrive.getAccelerationConstraint(10))
                 .build();
 
         Trajectory wiggle2 = mainRobot.trajectoryBuilder(wiggle1.end())
-                .splineToLinearHeading(new Pose2d(secondForward.end().getX()+2,
-                        secondForward.end().getY(), 0.5),0,
+                .splineToLinearHeading(new Pose2d(secondBack.end().getX()-2,
+                                secondBack.end().getY(), 0.5),0,
                         SampleMecanumDrive.getVelocityConstraint(10,1, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(10))
                 .build();
 
         Trajectory wiggle3 = mainRobot.trajectoryBuilder(wiggle2.end())
-                .splineToLinearHeading(secondForward.end(),0,
+                .splineToLinearHeading(secondBack.end(),0,
                         SampleMecanumDrive.getVelocityConstraint(10,1, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(10))
                 .build();
@@ -67,12 +67,12 @@ public class BlueCycle extends LinearOpMode {
                 .strafeLeft(1)
                 .build();
 
-        Trajectory thirdBack = mainRobot.trajectoryBuilder(postIntakeAdjust.end())
-                .back(60)
+        Trajectory thirdForward = mainRobot.trajectoryBuilder(postIntakeAdjust.end())
+                .forward(60)
                 .build();
 
-        Trajectory fourthForward = mainRobot.trajectoryBuilder(thirdBack.end())
-                .forward(60)
+        Trajectory fourthBack = mainRobot.trajectoryBuilder(thirdForward.end())
+                .back(60)
                 .build();
 
 
@@ -96,7 +96,7 @@ public class BlueCycle extends LinearOpMode {
         mainRobot.extender.closeReleaser();
         mainRobot.pause(300);
 
-        mainRobot.followTrajectory(firstBack);
+        mainRobot.followTrajectory(firstForward);
         mainRobot.pause(300);
 
         mainRobot.extender.setExtenderPower(firstExtendPower);
@@ -128,7 +128,7 @@ public class BlueCycle extends LinearOpMode {
 
         mainRobot.pause(500);
 
-        mainRobot.followTrajectory(secondForward);
+        mainRobot.followTrajectory(secondBack);
 
         mainRobot.pause(500);
 
@@ -156,16 +156,16 @@ public class BlueCycle extends LinearOpMode {
         mainRobot.pause(200);
 
         mainRobot.followTrajectory(mainRobot.trajectoryBuilder(mainRobot.getPoseEstimate())
-                    .splineToLinearHeading(secondForward.end(),0,
+                .splineToLinearHeading(secondBack.end(),0,
                         SampleMecanumDrive.getVelocityConstraint(10,1, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(10))
-                    .build());
+                .build());
         mainRobot.pause(200);
 
         mainRobot.followTrajectory(postIntakeAdjust);
         mainRobot.pause(200);
 
-        mainRobot.followTrajectory(thirdBack);
+        mainRobot.followTrajectory(thirdForward);
         mainRobot.pause(500);
         level = 3;
 
@@ -195,7 +195,7 @@ public class BlueCycle extends LinearOpMode {
 
         mainRobot.pause(500);
 
-        mainRobot.followTrajectory(fourthForward);
+        mainRobot.followTrajectory(fourthBack);
 
         mainRobot.pause(500);
 

@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ThreadPool;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Components.Hardware.Capper;
 import org.firstinspires.ftc.teamcode.Components.Hardware.Extender;
 import org.firstinspires.ftc.teamcode.Components.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Components.Hardware.Shooter;
@@ -23,6 +24,7 @@ public class MainRobot extends SampleMecanumDrive {
     public Intake intake;
     public Spinner spinner;
     public Shooter shooter;
+    public Capper capper;
 
     public Lighting lighting;
 
@@ -43,6 +45,7 @@ public class MainRobot extends SampleMecanumDrive {
         intake = new Intake(hardwareMap, telemetry);
         spinner = new Spinner(hardwareMap, telemetry);
         shooter = new Shooter(hardwareMap, telemetry);
+        capper = new Capper(hardwareMap, telemetry);
 
         lighting = new Lighting(hardwareMap, telemetry);
 

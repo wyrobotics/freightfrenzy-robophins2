@@ -2,19 +2,22 @@ package org.firstinspires.ftc.teamcode.OpModes.Autonomous;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Components.MainRobot;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
 @Autonomous
-public class RedPlacePark extends LinearOpMode {
+public class RedDuck extends LinearOpMode {
 
     MainRobot mainRobot;
 
-    public static double firstForwardDistance = 24;
+    public static double firstBackwardDistance = 24;
     public static long firstExtend = 400;
     public static double firstExtendPower = 0.8;
     public static double raiseInc = 0.45 / 3;
@@ -33,14 +36,22 @@ public class RedPlacePark extends LinearOpMode {
         Pose2d startPose = mainRobot.getPoseEstimate();
 
         Trajectory firstForward = mainRobot.trajectoryBuilder(startPose)
-                .forward(firstForwardDistance)
+                .splineToLinearHeading(new Pose2d(18,-3,-0.1),0,
+                        SampleMecanumDrive.getVelocityConstraint(10,DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory secondBackward = mainRobot.trajectoryBuilder(firstForward.end())
+                .splineToLinearHeading(new Pose2d(firstForward.end().getX()-44,firstForward.end().getY()+3,0),0,
+                        SampleMecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .build();
+
+        Trajectory thirdBackward = mainRobot.trajectoryBuilder(secondBackward.end())
                 .back(60)
                 .build();
 
-        Trajectory adjust = mainRobot.trajectoryBuilder(secondBackward.end())
+        Trajectory adjust = mainRobot.trajectoryBuilder(thirdBackward.end())
                 .strafeRight(26)
                 .build();
 
@@ -51,8 +62,8 @@ public class RedPlacePark extends LinearOpMode {
         double markerPos = mainRobot.openCVSampler.getPinkX();
         int level;
         if(markerPos < 50) level = 1;
-        else if(markerPos < 140) level = 2;
-        else level = 3;
+        else if(markerPos < 140) level = 3;
+        else level = 2;
 
 
         telemetry.addData("Level: ", level);
@@ -66,6 +77,14 @@ public class RedPlacePark extends LinearOpMode {
 
         mainRobot.followTrajectory(firstForward);
         mainRobot.pause(500);
+
+        mainRobot.spinner.spin(1);
+        mainRobot.pause(4000);
+        mainRobot.spinner.spin(0);
+        mainRobot.pause(500);
+
+        mainRobot.followTrajectory(secondBackward);
+        mainRobot.pause(1000);
 
         mainRobot.extender.setExtenderPower(firstExtendPower);
         mainRobot.pause(firstExtend);
@@ -93,11 +112,10 @@ public class RedPlacePark extends LinearOpMode {
 
         mainRobot.pause(1000);
 
-        mainRobot.followTrajectory(secondBackward);
+        mainRobot.followTrajectory(thirdBackward);
 
-        mainRobot.pause(500);
+        mainRobot.pause(1000);
 
-        mainRobot.followTrajectory(adjust);
     }
 
 }

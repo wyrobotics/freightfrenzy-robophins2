@@ -218,7 +218,8 @@ public class NewTeleOp extends LinearOpMode {
             if(aPressed && !gamepad2.a)
                 aPressed = false;
 
-
+            if(gamepad2.dpad_up) mainRobot.capper.changeCapperPos(0.002);
+            if(gamepad2.dpad_down) mainRobot.capper.changeCapperPos(-0.002);
 
 
 
