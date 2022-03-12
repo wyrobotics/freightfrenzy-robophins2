@@ -22,7 +22,7 @@ public class BlueCycle extends LinearOpMode {
     public static double firstExtendPower = 0.8;
     public static double raiseInc = 0.45 / 3;
     public static long raiseTime = 500;
-    public static double[] raise = new double[] {0.0,0.5,0.57,0.72};
+    public static double[] raise = new double[] {0.0,0.5,0.62,0.72};
     //public static long secondExtend = 200;
     public static long[] secondExtend = new long[] {0,500,400,470};
     public static double secondExtendPower = 0.8;
@@ -40,18 +40,18 @@ public class BlueCycle extends LinearOpMode {
                 .build();
 
         Trajectory secondForward = mainRobot.trajectoryBuilder(firstBack.end())
-                .forward(60)
+                .forward(61)
                 .build();
 
         Trajectory wiggle1 = mainRobot.trajectoryBuilder(secondForward.end())
-                .splineToLinearHeading(new Pose2d(secondForward.end().getX()+1,
+                .splineToLinearHeading(new Pose2d(secondForward.end().getX()+2,
                         secondForward.end().getY(), -0.5),0,
                         SampleMecanumDrive.getVelocityConstraint(10,1, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(10) )
                 .build();
 
         Trajectory wiggle2 = mainRobot.trajectoryBuilder(wiggle1.end())
-                .splineToLinearHeading(new Pose2d(secondForward.end().getX()+2,
+                .splineToLinearHeading(new Pose2d(secondForward.end().getX()+4,
                         secondForward.end().getY(), 0.5),0,
                         SampleMecanumDrive.getVelocityConstraint(10,1, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(10))
@@ -151,7 +151,7 @@ public class BlueCycle extends LinearOpMode {
         }
         telemetry.addData("WE GOIN", "YEEHAW");
         telemetry.update();
-        mainRobot.pause(200);
+        mainRobot.pause(1000);
         mainRobot.extender.closeReleaser();
         mainRobot.pause(200);
 

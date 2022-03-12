@@ -22,7 +22,7 @@ public class RedDuck extends LinearOpMode {
     public static double firstExtendPower = 0.8;
     public static double raiseInc = 0.45 / 3;
     public static long raiseTime = 1000;
-    public static double[] raise = new double[] {0.0,0.5,0.57,0.72};
+    public static double[] raise = new double[] {0.0,0.5,0.62,0.72};
     //public static long secondExtend = 200;
     public static long[] secondExtend = new long[] {0,450,400,470};
     public static double secondExtendPower = 0.8;
@@ -46,6 +46,7 @@ public class RedDuck extends LinearOpMode {
                         SampleMecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
+
 
         Trajectory thirdBackward = mainRobot.trajectoryBuilder(secondBackward.end())
                 .back(60)

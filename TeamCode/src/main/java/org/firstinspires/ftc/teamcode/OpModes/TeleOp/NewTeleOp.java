@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Components.Hardware.Capper;
 import org.firstinspires.ftc.teamcode.Components.MainRobot;
 
 @TeleOp
@@ -33,6 +34,9 @@ public class NewTeleOp extends LinearOpMode {
         boolean player2y = false;
         boolean player1y = false;
         boolean p1a = false;
+
+        boolean p2x = false;
+        boolean clawOpen = true;
 
         mainRobot = new MainRobot(hardwareMap, telemetry);
 
@@ -193,7 +197,7 @@ public class NewTeleOp extends LinearOpMode {
                 mainRobot.extender.setExtenderPower(0);
             } else {
                 mainRobot.extender.setExtenderPower(-gamepad2.left_stick_y);
-                if(Math.abs(gamepad2.left_stick_y) > 0.1) {
+                if(Math.abs(gamepad2.left_stick_y) > 0.05) {
                     mainRobot.intake.leftSlapOut();
                     mainRobot.intake.rightSlapOut();
                 }
@@ -218,8 +222,29 @@ public class NewTeleOp extends LinearOpMode {
             if(aPressed && !gamepad2.a)
                 aPressed = false;
 
-            if(gamepad2.dpad_up) mainRobot.capper.changeCapperPos(0.002);
-            if(gamepad2.dpad_down) mainRobot.capper.changeCapperPos(-0.002);
+            if(gamepad2.dpad_down) mainRobot.capper.changeCapperPos(0.05);
+            if(gamepad2.dpad_up) mainRobot.capper.changeCapperPos(-0.05);
+            /*
+            if(gamepad2.dpad_right) {
+                mainRobot.capper.openActuator();
+                mainRobot.shooter.setPitch(Capper.openPos);
+            }
+            if(gamepad2.dpad_left) {
+                mainRobot.capper.closeActuator();
+                mainRobot.shooter.setPitch(Capper.closePos);
+            }
+             */
+            if(gamepad2.x && !p2x) {
+                if(clawOpen) {
+                    mainRobot.capper.closeActuator();
+                    mainRobot.shooter.setPitch(Capper.closePos);
+                } else {
+                    mainRobot.capper.openActuator();
+                    mainRobot.shooter.setPitch(Capper.openPos);
+                }
+                p2x = true;
+            }
+            if(!gamepad2.x && p2x) p2x = false;
 
 
 

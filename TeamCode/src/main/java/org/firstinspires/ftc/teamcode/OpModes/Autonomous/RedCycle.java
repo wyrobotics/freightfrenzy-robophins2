@@ -22,7 +22,7 @@ public class RedCycle extends LinearOpMode {
     public static double firstExtendPower = 0.8;
     public static double raiseInc = 0.45 / 3;
     public static long raiseTime = 500;
-    public static double[] raise = new double[] {0.0,0.5,0.57,0.72};
+    public static double[] raise = new double[] {0.0,0.5,0.62,0.72};
     //public static long secondExtend = 200;
     public static long[] secondExtend = new long[] {0,500,400,470};
     public static double secondExtendPower = 0.8;
@@ -40,18 +40,18 @@ public class RedCycle extends LinearOpMode {
                 .build();
 
         Trajectory secondBack = mainRobot.trajectoryBuilder(firstForward.end())
-                .back(60)
+                .back(61)
                 .build();
 
         Trajectory wiggle1 = mainRobot.trajectoryBuilder(secondBack.end())
-                .splineToLinearHeading(new Pose2d(secondBack.end().getX()-1,
+                .splineToLinearHeading(new Pose2d(secondBack.end().getX()-2,
                                 secondBack.end().getY(), -0.5),0,
                         SampleMecanumDrive.getVelocityConstraint(10,1, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(10))
                 .build();
 
         Trajectory wiggle2 = mainRobot.trajectoryBuilder(wiggle1.end())
-                .splineToLinearHeading(new Pose2d(secondBack.end().getX()-2,
+                .splineToLinearHeading(new Pose2d(secondBack.end().getX()-4,
                                 secondBack.end().getY(), 0.5),0,
                         SampleMecanumDrive.getVelocityConstraint(10,1, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(10))
@@ -132,26 +132,26 @@ public class RedCycle extends LinearOpMode {
 
         mainRobot.pause(500);
 
-        mainRobot.intake.setLeftPower(-1);
+        mainRobot.intake.setRightPower(1);
         boolean gotOne = false;
         while(!gotOne) {
-            mainRobot.flushLeftIntake();
+            mainRobot.flushRightIntake();
             mainRobot.pause(100);
-            if(mainRobot.leftFlushing) break;
+            if(mainRobot.rightFlushing) break;
             mainRobot.followTrajectory(wiggle1);
-            mainRobot.flushLeftIntake();
+            mainRobot.flushRightIntake();
             mainRobot.pause(100);
-            if(mainRobot.leftFlushing) break;
+            if(mainRobot.rightFlushing) break;
             mainRobot.followTrajectory(wiggle2);
-            mainRobot.flushLeftIntake();
+            mainRobot.flushRightIntake();
             mainRobot.pause(100);
-            if(mainRobot.leftFlushing) break;
+            if(mainRobot.rightFlushing) break;
             mainRobot.followTrajectory(wiggle3);
             mainRobot.pause(200);
         }
         telemetry.addData("WE GOIN", "YEEHAW");
         telemetry.update();
-        mainRobot.pause(200);
+        mainRobot.pause(1000);
         mainRobot.extender.closeReleaser();
         mainRobot.pause(200);
 

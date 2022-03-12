@@ -16,8 +16,8 @@ public class Shooter {
     Servo pitch;
     DcMotor shooter;
 
-    public static double maxPitch = 1.0;
-    public static double minPitch = 0.0;
+    public static double maxPitch = 0.9;
+    public static double minPitch = 0.45;
     public static double pitchPos = 0.5;
 
     Telemetry telemetry;
@@ -46,6 +46,10 @@ public class Shooter {
         pitchPos = Math.max(minPitch, Math.min(maxPitch, pitchPos - (power/150.0)));
         telemetry.addData("Pitch: ", pitchPos);
         pitch.setPosition(pitchPos);
+    }
+
+    public void setPitch(double pitch) {
+        pitchPos = Math.max(minPitch, Math.min(maxPitch, pitch));
     }
 
 }

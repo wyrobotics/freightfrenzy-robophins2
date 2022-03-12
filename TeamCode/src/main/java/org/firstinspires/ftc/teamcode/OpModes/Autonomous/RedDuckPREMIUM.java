@@ -2,15 +2,18 @@ package org.firstinspires.ftc.teamcode.OpModes.Autonomous;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Components.MainRobot;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
 @Autonomous
-public class BluePlacePark extends LinearOpMode {
+public class RedDuckPREMIUM extends LinearOpMode {
 
     MainRobot mainRobot;
 
@@ -32,17 +35,28 @@ public class BluePlacePark extends LinearOpMode {
 
         Pose2d startPose = mainRobot.getPoseEstimate();
 
-        Trajectory firstBack = mainRobot.trajectoryBuilder(startPose)
-                .back(firstBackwardDistance)
+        Trajectory firstStrafe = mainRobot.trajectoryBuilder(startPose)
+                .strafeRight(4)
                 .build();
 
-        Trajectory secondForward = mainRobot.trajectoryBuilder(firstBack.end())
-                .forward(60)
+        Trajectory secondBackward = mainRobot.trajectoryBuilder(firstStrafe.end().plus(new Pose2d(0,0,Math.toRadians(180))))
+                .back(18, SampleMecanumDrive.getVelocityConstraint(10,DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
-        Trajectory adjust = mainRobot.trajectoryBuilder(secondForward.end())
-                .strafeRight(26)
+        Trajectory thirdForward = mainRobot.trajectoryBuilder(secondBackward.end())
+                .forward(18, SampleMecanumDrive.getVelocityConstraint(10,DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
+
+        Trajectory fourthStrafe = mainRobot.trajectoryBuilder(thirdForward.end().plus(new Pose2d(0,0,Math.toRadians(180))))
+                .strafeLeft(5)
+                .build();
+
+        Trajectory fifthBackward = mainRobot.trajectoryBuilder(fourthStrafe.end())
+                .back(60)
+                .build();
+
 
         mainRobot.openCVSampler.initOpenCVCamera();
 
@@ -64,7 +78,26 @@ public class BluePlacePark extends LinearOpMode {
         mainRobot.extender.closeReleaser();
         mainRobot.pause(300);
 
-        mainRobot.followTrajectory(firstBack);
+        mainRobot.followTrajectory(firstStrafe);
+        mainRobot.pause(500);
+
+        mainRobot.turn(Math.toRadians(180));
+
+        mainRobot.followTrajectory(secondBackward);
+        mainRobot.pause(500);
+
+        mainRobot.spinner.spin(1);
+        mainRobot.pause(4000);
+        mainRobot.spinner.spin(0);
+        mainRobot.pause(500);
+
+        mainRobot.followTrajectory(thirdForward);
+        mainRobot.pause(500);
+
+        mainRobot.turn(Math.toRadians(180));
+        mainRobot.pause(500);
+
+        mainRobot.followTrajectory(fourthStrafe);
         mainRobot.pause(500);
 
         mainRobot.extender.setExtenderPower(firstExtendPower);
@@ -93,11 +126,10 @@ public class BluePlacePark extends LinearOpMode {
 
         mainRobot.pause(1000);
 
-        mainRobot.followTrajectory(secondForward);
+        mainRobot.followTrajectory(fifthBackward);
 
-        mainRobot.pause(500);
+        mainRobot.pause(1000);
 
-        mainRobot.followTrajectory(adjust);
     }
 
 }
